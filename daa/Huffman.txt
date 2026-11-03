@@ -1,0 +1,70 @@
+# Huffman Coding Viva Preparation
+
+## 1. What does this program do
+
+It builds a Huffman tree from characters and their frequencies, then prints a binary code for each character. Characters that occur more often generally receive shorter codes, which can reduce the total number of bits needed to represent the data.
+
+## 2. How does the algorithm work
+
+1. Create a leaf node for each character and put it in a min-priority queue.
+2. Remove the two nodes with the smallest frequencies.
+3. Join them under a new parent node whose frequency is their sum.
+4. Put the parent back in the queue.
+5. Repeat until one node remains; that node is the root of the Huffman tree.
+6. Traverse the tree append `0` for a left edge and `1` for a right edge. The path to each leaf is that character’s code.
+
+For the sample frequencies, `v1` and `f2` are combined first. The exact codes can vary when frequencies tie, but the code lengths and total encoded size remain optimal.
+
+## 3. Key concepts and code
+
+- Huffman coding A lossless, variable-length coding method.
+- Prefix-free code No character’s code is the prefix of another character’s code. This lets a decoder identify code boundaries without separators.
+- Leaf node Holds a character and its frequency.
+- Internal node Holds the sum of its children’s frequencies. Here, `'-'` is used as a placeholder character.
+- Min-heap The priority queue makes the lowest-frequency node available first.
+- `Compare` `a-freq  b-freq` makes `priority_queue` behave as a min-heap by frequency.
+- `printCodes` A recursive depth-first traversal; left adds `0`, right adds `1`.
+
+## 4. Common viva questions
+
+Why do frequent characters get shorter codes  
+The algorithm repeatedly combines the least frequent nodes. This places low-frequency characters deeper in the tree, while higher-frequency characters tend to be closer to the root.
+
+Why use a priority queue  
+It efficiently finds and removes the two smallest-frequency nodes at each step.
+
+What is the time complexity  
+For `n` distinct characters, building the tree takes O(n log n) using a priority queue. Printing the codes takes O(n) tree traversal time, plus the cost of writing the code strings.
+
+Is Huffman coding lossless  
+Yes. With the tree or code table available, the encoded data can be decoded back to the original symbols.
+
+Can the codes differ for the same frequencies  
+Yes. If frequencies tie, different valid tie-breaking choices can produce different code assignments. The total weighted path length remains optimal.
+
+What happens when there is only one character  
+The root is also a leaf, so this code prints an empty code. A practical implementation usually assigns `0` in that case.
+
+What if `n` is zero  
+The priority queue is empty, and `pq.top()` is invalid. The program should reject zero characters before building the tree.
+
+Does the code free allocated memory  
+No. Nodes are allocated using `new` but never deleted. A production version should manage ownership, for example with smart pointers or explicit cleanup.
+
+## 5. Limitations and improvements
+
+- It assumes the character and frequency vectors have matching lengths and that frequencies are valid.
+- It does not validate `n`, negative frequencies, or duplicate characters.
+- It does not encode or decode a message; it only prints a code table.
+- For a single character, assign a nonempty code such as `0`.
+- Use `long long` for frequencies if sums might exceed the range of `int`.
+- Add deterministic tie-breaking if you need repeatable output across equal frequencies.
+- Include `cstddef` or use `size_t` for vector indexing and sizes.
+
+## 6. A short answer to present in your viva
+
+ “This program constructs a Huffman tree using a min-priority queue. It repeatedly combines the two nodes with the lowest frequencies until one root remains. A recursive traversal assigns 0 to left edges and 1 to right edges, producing prefix-free variable-length codes. The construction takes O(n log n) time for n characters.”
+
+## 7. Be ready to trace the sample
+
+For `a3, f2, v1, c5, w7`, each merge adds the two smallest remaining frequencies. The resulting tree gives shorter paths to the more frequent characters. If the examiner asks why your printed codes differ from the sample, explain that priority-queue ties and merge ordering can change the specific bit patterns while preserving optimal code lengths.

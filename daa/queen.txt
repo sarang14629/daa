@@ -1,0 +1,49 @@
+## N-Queen Program: Viva Preparation
+
+### What does this program do?
+
+It uses **backtracking** to find and print arrangements of `N` queens on an `N × N` chessboard so that no two queens attack each other. It also asks you to specify the position of the first queen.
+
+### Important viva questions
+
+**1. What is the N-Queen problem?**  
+Place `N` queens on an `N × N` chessboard so that no two queens share the same row, column, or diagonal.
+
+**2. What is backtracking?**  
+Backtracking builds a solution one step at a time. If a choice leads to a dead end, it undoes that choice and tries another.
+
+**3. How does `solveNQueens` work?**  
+It places one queen in each row. For each column, it checks whether the position is safe. If so, it places the queen and recursively solves the next row. After returning, it removes the queen and tries another column.
+
+**4. What does `isSafe` check?**  
+It checks the current column and both diagonals above the current position. It only checks upward because queens are placed row by row, from top to bottom.
+
+**5. Why does `row == n` mean a solution is found?**  
+It means the program placed a queen in every row without finding a conflict, so it prints the board.
+
+**6. What is the purpose of `board[row][col] = 0` after the recursive call?**  
+That is the backtracking step. It removes the queen so the program can try a different column.
+
+**7. What does `vector<vector<int>>` represent?**  
+A two-dimensional vector used as the chessboard. `1` represents a queen, and `0` represents an empty square.
+
+**8. Does the function print one solution or all solutions?**  
+It prints every solution it finds. The recursive call’s return value is ignored, so finding one solution does not stop the search.
+
+**9. What is the time complexity?**  
+The search is exponential in the worst case. A common upper-bound description is approximately `O(N!)`, since the program tries placements row by row while avoiding reused columns.
+
+**10. What does `using namespace std;` do?**  
+It allows standard library names such as `vector` and `cout` to be used without writing `std::` each time.
+
+### Important issue in this code
+
+The program places the first queen, then calls `solveNQueens(board, 0, n)`. Since solving starts again at row `0`, it may place another queen in that same row. This can produce invalid arrangements, and the shown sample output does not match the code as written.
+
+To solve with a fixed first queen, start from the next row and check that the starting position is valid. For example, after validating and placing the first queen at row `firstRow`, the solver needs to account for rows both before and after it; a simple “start at the next row” works only if the fixed queen is in row `0`.
+
+Also validate that `n > 0` and that the entered row and column are within `0` to `n-1` before indexing the board.
+
+### Short explanation to say in your viva
+
+> “This program solves the N-Queen problem using backtracking. It places queens row by row and checks each position for conflicts in the column and diagonals. If a position is safe, it places a queen and recursively processes the next row. When a choice fails, it removes the queen and tries another position. When all rows are filled, it prints the arrangement. The fixed-queen input needs special handling because the current code starts solving again from row zero.”

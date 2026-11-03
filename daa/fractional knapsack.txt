@@ -1,0 +1,102 @@
+# Viva Preparation: Fractional Knapsack
+
+## 1. What does this program do?
+
+It solves the **fractional knapsack problem**. Given items with values and weights, it maximizes the total value placed in a knapsack of capacity `W`. You may take a fraction of an item.
+
+## 2. What is the greedy strategy?
+
+Choose items in descending order of **value per unit weight**:
+
+\[
+\text{ratio}=\frac{\text{value}}{\text{weight}}
+\]
+
+Take each item fully if it fits. If it does not, take the fraction that fills the remaining capacity.
+
+## 3. Why does the greedy strategy work here?
+
+Because items can be divided. Whenever an item has a higher value-to-weight ratio, using available capacity on it gives more value than using the same capacity on a lower-ratio item.
+
+## 4. Walk through the sample
+
+| Item | Value | Weight | Value/weight |
+|---|---:|---:|---:|
+| 1 | 12 | 32 | 0.375 |
+| 2 | 56 | 67 | about 0.836 |
+| 3 | 23 | 87 | about 0.264 |
+
+The order is item 2, item 1, item 3.
+
+- Take \(45/67\) of item 2.
+- The knapsack is full.
+- Value is \(56 \times 45/67 \approx 37.6119\).
+
+So the output is approximately **37.6119**.
+
+## 5. What does the `Item` structure store?
+
+```cpp
+struct Item {
+    int weight;
+    int value;
+};
+```
+
+It groups an item’s weight and value into one object. The input reads value first and weight second, matching the two fields by name.
+
+## 6. What is the purpose of `compare`?
+
+```cpp
+bool compare(Item a, Item b) {
+    double r1 = (double)a.value / a.weight;
+    double r2 = (double)b.value / b.weight;
+    return r1 > r2;
+}
+```
+
+It tells `sort` to place the item with the larger value-to-weight ratio first.
+
+The cast to `double` ensures floating-point division. Without it, integer division could truncate the ratio.
+
+## 7. What does `fractionalKnapsack` do?
+
+1. Sorts the items by ratio.
+2. Iterates through them from highest ratio to lowest.
+3. Adds a full item’s value if it fits.
+4. Otherwise, adds the value of the fraction that fits.
+5. Returns the accumulated value.
+
+`W` is passed by value, so reducing it inside the function does not change `W` in `main`.
+
+## 8. Why is the result a `double`?
+
+A fractional item can contribute a non-integer value. For example, taking \(45/67\) of an item worth 56 gives a decimal result.
+
+## 9. What is the time complexity?
+
+Sorting takes \(O(n\log n)\). The scan takes \(O(n)\), so the total is **\(O(n\log n)\)**. The sort may require up to \(O(n)\) extra space depending on the implementation.
+
+## 10. How is this different from 0/1 knapsack?
+
+In **fractional knapsack**, an item can be split, and the greedy ratio strategy gives an optimal answer.
+
+In **0/1 knapsack**, each item must be taken whole or left behind. Greedy by ratio is not guaranteed to be optimal; dynamic programming is commonly used.
+
+## 11. What assumptions does this code make?
+
+- Weights are positive; a zero weight would cause division by zero.
+- Capacity and item values are non-negative.
+- Input is valid.
+- The `int` fields are large enough for the values and weights.
+
+## 12. What could be improved?
+
+- Reject zero or negative weights before sorting.
+- Pass `Item` arguments to `compare` by `const` reference to avoid copies.
+- Print with `fixed` and `setprecision` for a consistent number of decimal places.
+- Avoid sorting the caller’s vector in place if its original order must be preserved.
+
+## Quick viva summary
+
+> “The program sorts items by value-to-weight ratio in descending order, then fills the knapsack greedily. It takes whole items when possible and a fraction of the next item otherwise. Sorting dominates the runtime, so the time complexity is \(O(n\log n)\). The greedy method is optimal because items are divisible; it does not generally solve the 0/1 knapsack problem.”

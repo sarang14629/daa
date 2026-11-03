@@ -1,0 +1,44 @@
+## Fibonacci program viva practice
+
+**Q: What is the purpose of this program?**  
+A: It prints the first `n` Fibonacci numbers using recursion and iteration, then counts the recursive calls and iterative loop iterations.
+
+**Q: What is the Fibonacci sequence?**  
+A: A sequence where each term after the first two is the sum of the previous two: `0, 1, 1, 2, 3, 5, ...`.
+
+**Q: What are the base cases in `fibRecursive`?**  
+A: When `n <= 1`, the function returns `n`. So `fibRecursive(0)` returns `0`, and `fibRecursive(1)` returns `1`.
+
+**Q: Why does the recursive function call itself twice?**  
+A: The Fibonacci rule is `fib(n) = fib(n - 1) + fib(n - 2)`.
+
+**Q: What does `recursiveSteps` count?**  
+A: Every call to `fibRecursive`, including calls that hit a base case. For `n = 5`, the program makes 19 calls in total.
+
+**Q: What does `iterativeSteps` count?**  
+A: The number of times the `for` loop runs. For `n = 5`, it runs 3 times. The initial `0` and `1` are printed before the loop and are not counted.
+
+**Q: How does the iterative function generate terms?**  
+A: It starts with `prev = 0` and `curr = 1`, calculates `next = prev + curr`, then moves the values forward.
+
+**Q: Which method is more efficient?**  
+A: Iteration. This recursive implementation repeats calculations, so its running time grows exponentially. The iterative version takes `O(n)` time and `O(1)` extra space.
+
+**Q: What are the space complexities?**  
+A: The recursive function uses `O(n)` call-stack space at its deepest point. The iterative function uses `O(1)` extra space.
+
+**Q: What happens when `n = 1`?**  
+A: Both methods print only `0`. The iterative loop does not run.
+
+**Q: What happens when `n <= 0`?**  
+A: No Fibonacci terms are printed. The loop in `main` does not run, and the iterative function returns immediately for `n <= 0`.
+
+**Q: What is the role of `#include <iostream>`?**  
+A: It provides standard input and output features such as `cin` and `cout`.
+
+**Q: What does `using namespace std;` do?**  
+A: It lets us use names like `cin` and `cout` without writing `std::` before them.
+
+### Short explanation to say aloud
+
+“This program generates the Fibonacci sequence in two ways. The recursive function uses the formula `fib(n) = fib(n - 1) + fib(n - 2)` and stops at 0 and 1. The iterative function keeps the previous two values and calculates each next term in a loop. For five terms, both print `0 1 1 2 3`. The recursive version makes 19 function calls, while the iterative loop runs 3 times.”

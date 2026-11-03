@@ -1,0 +1,70 @@
+# Viva Preparation: 0–1 Knapsack
+
+## What does this program do?
+
+It solves the **0–1 Knapsack problem** using **dynamic programming**. Given items with values and weights, it finds the greatest total value that fits within the knapsack’s capacity.
+
+“0–1” means each item is either **included once** or **not included**. Items cannot be split or reused.
+
+## How does the dynamic programming table work?
+
+`dp[i][w]` stores the maximum value achievable using the **first `i` items** and a weight limit of **`w`**.
+
+For each item and capacity:
+
+- If the item is too heavy, skip it: `dp[i][w] = dp[i - 1][w]`
+- Otherwise, choose the better of skipping it or including it:
+  `dp[i][w] = max(dp[i - 1][w], val[i - 1] + dp[i - 1][w - wt[i - 1]])`
+
+The answer is in `dp[n][W]`: the best value using all `n` items with capacity `W`.
+
+## Explain the sample output
+
+The items are:
+
+| Item | Value | Weight |
+|---|---:|---:|
+| 1 | 12 | 45 |
+| 2 | 32 | 34 |
+| 3 | 14 | 65 |
+
+The capacity is 60. Item 3 is too heavy. Items 1 and 2 together weigh 79, so they cannot both fit. Item 2 gives the greatest value that fits, so the answer is **32**.
+
+## Common viva questions
+
+**Why use dynamic programming?**  
+The problem has overlapping subproblems: the same item prefixes and capacities recur. Dynamic programming stores their results instead of solving them repeatedly.
+
+**What are the base cases?**  
+With zero items or zero capacity, the maximum value is zero. The table is initialized to zero, which represents these cases.
+
+**Why does the recurrence use `dp[i - 1]` when including an item?**  
+That ensures the current item is used at most once. Using `dp[i]` could allow the same item to be added repeatedly.
+
+**What is the time complexity?**  
+`O(nW)`, where `n` is the number of items and `W` is the capacity.
+
+**What is the space complexity?**  
+`O(nW)` for the two-dimensional table.
+
+**Why do the loops start at 1?**  
+Row 0 and column 0 are base cases. Positive item counts and capacities are processed from 1 onward.
+
+**Does the program show which items were selected?**  
+No. It returns only the maximum value. To list selected items, trace back through the table from `dp[n][W]`.
+
+**Is this a greedy algorithm?**  
+No. It considers the optimal choice for each item and capacity using dynamic programming. Choosing the item with the highest value or best value-to-weight ratio does not always produce the optimal answer.
+
+**Can the capacity loop start at 0?**  
+It can, if the recurrence handles the zero-capacity case correctly. Starting at 1 is fine here because the zero-capacity column is already initialized.
+
+## Code details to remember
+
+- `wt[i - 1]` and `val[i - 1]` refer to item `i`, since vector indexes start at 0 while the DP rows start at 1.
+- `dp[i - 1][w - wt[i - 1]]` is the best value for the remaining capacity after including the item.
+- The sample assumes nonnegative weights and values, and a nonnegative capacity.
+- The code calls `max`, so include `#include <algorithm>` explicitly for portability.
+
+**Short explanation to say aloud:**  
+“I use a table where each cell stores the best value for the first `i` items under capacity `w`. For each item, I compare skipping it with taking it once, if it fits. The bottom-right cell gives the maximum value. The algorithm runs in `O(nW)` time and uses `O(nW)` space.”
